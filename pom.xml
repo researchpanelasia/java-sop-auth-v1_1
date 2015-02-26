@@ -2,6 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.surveyon.partners</groupId>
   <artifactId>surveyon-partners-client-for-java1_4</artifactId>
+  <packaging>jar</packaging>  
   <version>0.0.1-SNAPSHOT</version>
   <name>surveyon-partners-client-for-java1_4</name>
   <description>surveyon partners client for java 1.4</description>
@@ -21,5 +22,21 @@
 		<artifactId>httpclient</artifactId>
 		<version>4.0</version>
 	</dependency>	
-  </dependencies>  
+  </dependencies>
+  <build>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-source-plugin</artifactId>
+              <executions>
+                  <execution>
+                      <phase>package</phase>
+                      <goals>
+                          <goal>jar</goal>
+                      </goals>
+                  </execution>
+              </executions>
+          </plugin>
+      </plugins>
+  </build>    
 </project>
