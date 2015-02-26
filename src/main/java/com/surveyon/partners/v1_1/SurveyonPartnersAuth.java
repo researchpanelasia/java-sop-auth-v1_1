@@ -1,7 +1,7 @@
 /**
-* Copyright (C) Research Panel Asia, Inc.
-* 
-**/
+ * Copyright (C) Research Panel Asia, Inc.
+ * 
+ **/
 package com.surveyon.partners.v1_1;
 
 import java.security.InvalidKeyException;
@@ -15,17 +15,39 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Hex;
 
+import com.surveyon.partners.v1_1.util.SurveyonPartnersClock;
+
 /**
  * Authentication helper for surveyob Partenrs API v1.1 
  * @author Research Panel Asia, Inc.
  */
 public class SurveyonPartnersAuth {
-	
+
+	/**
+	 * clock
+	 */
+	private SurveyonPartnersClock clock = null;
+
 	/**
 	 * Valid for 10 min by default
 	 */
-	private static int SIG_VALID_FOR_SEC = 10 * 60;
-	
+	private static final int SIG_VALID_FOR_SEC = 10 * 60;
+
+	/**
+	 * Constructor
+	 */
+	public SurveyonPartnersAuth() {
+		this.clock = new SurveyonPartnersClock();
+	}
+
+	/**
+	 * setter
+	 * @param clock
+	 */
+	public void setClock(SurveyonPartnersClock clock) {
+		this.clock = clock;
+	}
+
 	/**
 	 * Verify given signature is valid 
 	 * @param parameters in TreeMap
@@ -33,22 +55,22 @@ public class SurveyonPartnersAuth {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean verifySignature(TreeMap params, String secret) throws Exception{
+	public boolean verifySignature(TreeMap params, String secret) throws Exception{
 		//validate		
 		if (params.get("sig") == null) throw new Exception("sig doesn't exist");	
 		if (params.get("time") == null) throw new Exception("time doesn't exist");
-		
+
 		// check if time is within SIG_VALID_FOR_SEC
-		long current = System.currentTimeMillis() / 1000L;
+		long current = this.clock.getCurrentTimestamp();
 		long reqTime = Integer.parseInt(params.get("time").toString());
-		if ( reqTime < current -SurveyonPartnersAuth.SIG_VALID_FOR_SEC 
-		  || current + SurveyonPartnersAuth.SIG_VALID_FOR_SEC  < reqTime ){
+		if ( reqTime < current - SurveyonPartnersAuth.SIG_VALID_FOR_SEC 
+				|| current + SurveyonPartnersAuth.SIG_VALID_FOR_SEC  < reqTime ){
 			return false;
 		}
-		
+
 		String signature =  params.get("sig").toString();
 		params.remove("sig");		
-		
+
 		//create HTTP parameter string
 		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
 
@@ -62,18 +84,31 @@ public class SurveyonPartnersAuth {
 	 * Generate query from given parameters and app secret
 	 * @param parameters in TreeMap
 	 * @param app secret
-	 * @return generated signature
+	 * @return generated query
 	 * @throws Exception
 	 */
-	public static String generateQuery(TreeMap params, String secret) throws Exception {
+	public String generateQuery(TreeMap params, String secret) throws Exception {
 		//create HTTP parameter string
 		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
-
 		//create sha256 Hex
 		String sig = SurveyonPartnersAuth.createHmacSha256Hex(combined, secret);
 		combined = combined + "&sig=" + sig;
 
 		return combined;
+	}
+
+	/**
+	 * Generate signature from given parameters and app secret
+	 * @param parameters in TreeMap
+	 * @param app secret
+	 * @return generated signature
+	 * @throws Exception
+	 */
+	public String generateSignature(TreeMap params, String secret) throws Exception {
+		//create HTTP parameter string
+		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
+		//create sha256 Hex
+		return SurveyonPartnersAuth.createHmacSha256Hex(combined, secret);
 	}
 
 	/**
