@@ -125,6 +125,9 @@ public class SurveyonPartnersAuth {
 			Object value = entry.getValue();
 
 			if (value == null) throw new Exception("value for " + key + " is invalid");
+			
+			// exclude "sop" prefix			
+			if(key.toString().startsWith("sop_")) continue;
 
 			builder.append(key.toString()).append("=").append(value.toString()).append("&");
 		}

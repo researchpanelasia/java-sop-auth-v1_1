@@ -14,18 +14,37 @@ import com.surveyon.partners.v1_1.util.SurveyonPartnersClock;
 public class SurveyonPartnersAuthTest extends TestCase {
 
 	/**
-	 * Generate query normally 
+	 * Generate query and signature normally 
 	 * @throws Exception 
 	 */
 	public void testInstantiateWithValidParams() throws Exception {
 		SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
 		TreeMap param = new TreeMap();
-		param.put("time", "1424858192");
-		param.put("app_id", "27");
-		param.put("from_date", "2015-1-20");
-		param.put("to_date", "2015-1-21");
+		param.put("ccc", "ccc");
+		param.put("bbb", "bbb");
+		param.put("aaa", "aaa");
 		
-		Assert.assertEquals("app_id=27&from_date=2015-1-20&time=1424858192&to_date=2015-1-21&sig=c39fb3790d9e1272a5ae25b57ad354393481534bf0078bd35266ba88cb668d0e"
+		Assert.assertEquals("2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
+							,auth.generateSignature(param, "hogehoge"));		
+		Assert.assertEquals("aaa=aaa&bbb=bbb&ccc=ccc&sig=2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
+							,auth.generateQuery(param, "hogehoge"));		
+	}
+
+	/**
+	 * Generate query and signature normally with "sop_" prefix 
+	 * @throws Exception 
+	 */
+	public void testInstantiateWithValidParamsPrefixedSOP() throws Exception {
+		SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
+		TreeMap param = new TreeMap();
+		param.put("sop_sss", "sop_sss");		
+		param.put("ccc", "ccc");
+		param.put("bbb", "bbb");
+		param.put("aaa", "aaa");
+		
+		Assert.assertEquals("2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
+							,auth.generateSignature(param, "hogehoge"));		
+		Assert.assertEquals("aaa=aaa&bbb=bbb&ccc=ccc&sig=2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
 							,auth.generateQuery(param, "hogehoge"));		
 	}
 	
@@ -201,6 +220,9 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		
 		Assert.assertFalse(auth.verifySignature(param, "hogehoge"));
 	}		
+	
+	
+	
 		
 	private class ClockMock extends SurveyonPartnersClock{
 		private long timestamp = 0;
