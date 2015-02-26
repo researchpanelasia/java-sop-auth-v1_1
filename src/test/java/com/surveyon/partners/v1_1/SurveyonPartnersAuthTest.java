@@ -47,10 +47,11 @@ public class SurveyonPartnersAuthTest extends TestCase {
 	 */
 	public void testVerifyWithValidParams() throws Exception {
 		TreeMap param = new TreeMap();
-		param.put("time", "1424858192");
+		long current = System.currentTimeMillis() / 1000L;
+		param.put("time", current + "");
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
-		param.put("to_date", "2015-1-21");
+		param.put("to_date", "2015-1-21");		
 		param.put("sig", "c39fb3790d9e1272a5ae25b57ad354393481534bf0078bd35266ba88cb668d0e");
 		
 		Assert.assertTrue(SurveyonPartnersAuth.verifySignature(param, "hogehoge"));
@@ -72,6 +73,24 @@ public class SurveyonPartnersAuthTest extends TestCase {
 			Assert.assertEquals("sig doesn't exist",e.getMessage());
 		}
 	}
+	
+	/**
+	 * verify without time
+	 */
+	public void testVerifyWithoutTime() {
+		TreeMap param = new TreeMap();
+		param.put("app_id", "27");
+		param.put("from_date", "2015-1-20");
+		param.put("to_date", "2015-1-21");
+		param.put("sig", "c39fb3790d9e1272a5ae25b57ad354393481534bf0078bd35266ba88cb668d0e");
+
+		try {
+			Assert.assertTrue(SurveyonPartnersAuth.verifySignature(param, "hogehoge"));
+		} catch (Exception e) {
+			Assert.assertEquals("time doesn't exist",e.getMessage());
+		}
+	}
+	
 	
 	/**
 	 * verify valid wrong signature

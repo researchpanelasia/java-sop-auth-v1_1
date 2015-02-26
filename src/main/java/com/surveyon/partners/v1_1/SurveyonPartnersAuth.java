@@ -17,9 +17,14 @@ import org.apache.commons.codec.binary.Hex;
 
 /**
  * Authentication helper for surveyob Partenrs API v1.1 
- * @author research panel asia
+ * @author Research Panel Asia, Inc.
  */
 public class SurveyonPartnersAuth {
+	
+	/**
+	 * Valid for 10 min by default
+	 */
+	private static int SIG_VALID_FOR_SEC = 10 * 60;
 	
 	/**
 	 * query with signature generated from given parameters
@@ -65,17 +70,26 @@ public class SurveyonPartnersAuth {
 	 * @throws Exception
 	 */
 	public static boolean verifySignature(TreeMap params, String secret) throws Exception{
-		if (!params.containsKey("sig") || params.get("sig") == null){
-			throw new Exception("sig doesn't exist");
+		//validate		
+		if (params.get("sig") == null) throw new Exception("sig doesn't exist");	
+		if (params.get("time") == null) throw new Exception("time doesn't exist");
+		
+		// check if time is within SIG_VALID_FOR_SEC
+		long current = System.currentTimeMillis() / 1000L;
+		long reqTime = Integer.parseInt(params.get("time").toString());
+		if ( reqTime < current -SurveyonPartnersAuth.SIG_VALID_FOR_SEC 
+		  || current + SurveyonPartnersAuth.SIG_VALID_FOR_SEC  < reqTime ){
+			return false;
 		}
+		
 		String signature =  params.get("sig").toString();
-		params.remove("sig");
-
+		params.remove("sig");		
+		
 		//create HTTP parameter string
 		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
 
 		//create sha256 Hex
-		String created= SurveyonPartnersAuth.creatHmacSha256Hex(combined, secret);
+		String created= SurveyonPartnersAuth.createHmacSha256Hex(combined, secret);
 
 		return created.equals(signature);
 	}
@@ -92,7 +106,7 @@ public class SurveyonPartnersAuth {
 		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
 
 		//create sha256 Hex
-		String sig = SurveyonPartnersAuth.creatHmacSha256Hex(combined, secret);
+		String sig = SurveyonPartnersAuth.createHmacSha256Hex(combined, secret);
 		combined = combined + "&sig=" + sig;
 
 		this.query = combined;
@@ -129,7 +143,7 @@ public class SurveyonPartnersAuth {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 */
-	private static String creatHmacSha256Hex(String message, String key) throws NoSuchAlgorithmException, InvalidKeyException {
+	private static String createHmacSha256Hex(String message, String key) throws NoSuchAlgorithmException, InvalidKeyException {
 		SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(),"HmacSHA256");
 		Mac mac = Mac.getInstance("HmacSHA256");
 		mac.init(keySpec);
