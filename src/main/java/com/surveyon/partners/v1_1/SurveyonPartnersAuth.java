@@ -3,8 +3,8 @@ package com.surveyon.partners.v1_1;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -23,11 +23,11 @@ public class SurveyonPartnersAuth {
 		return query;
 	}
 
-	public SurveyonPartnersAuth(LinkedHashMap params, String secret) throws Exception {		
+	public SurveyonPartnersAuth(TreeMap params, String secret) throws Exception {		
 		this.generateSignature(params, secret);
 	}
 
-	public static boolean verifySignature(LinkedHashMap params, String secret) throws Exception{
+	public static boolean verifySignature(TreeMap params, String secret) throws Exception{
 		if (!params.containsKey("sig") || params.get("sig") == null){
 			throw new Exception("sig doesn't exist");
 		}
@@ -43,7 +43,7 @@ public class SurveyonPartnersAuth {
 		return created.equals(signature);
 	}
 
-	private String generateSignature(LinkedHashMap params, String secret) throws Exception {
+	private String generateSignature(TreeMap params, String secret) throws Exception {
 		//create HTTP parameter string
 		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
 
@@ -56,7 +56,7 @@ public class SurveyonPartnersAuth {
 		return sig;
 	}
 
-	private static String createCombinedParameter(LinkedHashMap params) throws Exception {
+	private static String createCombinedParameter(TreeMap params) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		for (Iterator it = params.entrySet().iterator(); it.hasNext();) {
 			Map.Entry entry = (Map.Entry)it.next();

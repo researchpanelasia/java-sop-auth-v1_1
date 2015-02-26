@@ -16,5 +16,10 @@
 		<artifactId>commons-codec-repackaged</artifactId>
 		<version>10.0-b28</version>
 	</dependency>	
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.0</version>
+	</dependency>	
   </dependencies>  
 </project>
