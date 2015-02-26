@@ -7,6 +7,7 @@ package com.surveyon.partners.v1_1.util;
 public class SurveyonPartnersClock {
 	
 	/**
+	 * return current timestamp
 	 * @return
 	 */
 	public long getCurrentTimestamp(){

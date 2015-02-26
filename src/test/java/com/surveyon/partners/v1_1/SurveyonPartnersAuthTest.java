@@ -4,13 +4,12 @@
  **/
 package com.surveyon.partners.v1_1;
 
-import java.util.Calendar;
 import java.util.TreeMap;
-
-import com.surveyon.partners.v1_1.util.SurveyonPartnersClock;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import com.surveyon.partners.v1_1.util.SurveyonPartnersClock;
 
 public class SurveyonPartnersAuthTest extends TestCase {
 
