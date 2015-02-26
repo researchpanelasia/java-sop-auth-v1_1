@@ -12,9 +12,9 @@ import org.apache.http.util.EntityUtils;
 public class Example {
 
 	public static void main(String[] args) {		        
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpResponse response;
-                
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpResponse response;
+
 		try {
 			TreeMap param = new TreeMap();
 			param.put("time", "1424925486");
@@ -22,20 +22,20 @@ public class Example {
 			param.put("from_date", "2015-1-20");
 			param.put("to_date", "2015-1-21");
 			SurveyonPartnersAuth instance = new SurveyonPartnersAuth(param , args[1]);
-			
-	        HttpGet httpget = new HttpGet(args[2] + "?" + instance.getQuery());
-	        
-	        System.out.println("executing request " + httpget.getURI());
-	        response = httpclient.execute(httpget);
-	        HttpEntity entity = response.getEntity();
 
-	        System.out.println("----------------------------------------");
-	        System.out.println(response.getStatusLine());
-	        if (entity != null) {
-	            System.out.println("Response content length: " + entity.getContentLength());
-	            System.out.println("Response content length: " + EntityUtils.toString(entity));
-	        }
-	        System.out.println("----------------------------------------");
+			HttpGet httpget = new HttpGet(args[2] + "?" + instance.getQuery());
+
+			System.out.println("executing request " + httpget.getURI());
+			response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+
+			System.out.println("----------------------------------------");
+			System.out.println(response.getStatusLine());
+			if (entity != null) {
+				System.out.println("Response content length: " + entity.getContentLength());
+				System.out.println("Response content length: " + EntityUtils.toString(entity));
+			}
+			System.out.println("----------------------------------------");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
