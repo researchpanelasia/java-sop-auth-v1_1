@@ -36,6 +36,11 @@
                       </goals>
                   </execution>
               </executions>
+              <configuration>
+	            <excludes>
+	              <exclude>src/example/*</exclude>
+	            </excludes>
+              </configuration>
           </plugin>
       </plugins>
   </build>    
