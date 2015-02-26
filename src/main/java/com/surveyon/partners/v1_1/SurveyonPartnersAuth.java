@@ -110,6 +110,17 @@ public class SurveyonPartnersAuth {
 		//create sha256 Hex
 		return SurveyonPartnersAuth.createHmacSha256Hex(combined, secret);
 	}
+	
+	/**
+	 * Generate signature from given json string and app secret
+	 * @param json
+	 * @param secret
+	 * @return generated signature
+	 * @throws Exception
+	 */
+	public String generateSignature(String json, String secret) throws Exception {
+		return SurveyonPartnersAuth.createHmacSha256Hex(json, secret);
+	}
 
 	/**
 	 * Combine given parameters as query string ordered alphabetically

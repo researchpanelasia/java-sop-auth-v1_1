@@ -17,37 +17,48 @@ public class SurveyonPartnersAuthTest extends TestCase {
 	 * Generate query and signature normally 
 	 * @throws Exception 
 	 */
-	public void testInstantiateWithValidParams() throws Exception {
+	public void testGenerateSignatureWithValidParams() throws Exception {
 		SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
 		TreeMap param = new TreeMap();
 		param.put("ccc", "ccc");
 		param.put("bbb", "bbb");
 		param.put("aaa", "aaa");
-		
+
 		Assert.assertEquals("2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
-							,auth.generateSignature(param, "hogehoge"));		
+				,auth.generateSignature(param, "hogehoge"));		
 		Assert.assertEquals("aaa=aaa&bbb=bbb&ccc=ccc&sig=2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
-							,auth.generateQuery(param, "hogehoge"));		
+				,auth.generateQuery(param, "hogehoge"));		
 	}
 
 	/**
 	 * Generate query and signature normally with "sop_" prefix 
 	 * @throws Exception 
 	 */
-	public void testInstantiateWithValidParamsPrefixedSOP() throws Exception {
+	public void testGenerateSignatureWithValidParamsPrefixedSOP() throws Exception {
 		SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
 		TreeMap param = new TreeMap();
 		param.put("sop_sss", "sop_sss");		
 		param.put("ccc", "ccc");
 		param.put("bbb", "bbb");
 		param.put("aaa", "aaa");
-		
+
 		Assert.assertEquals("2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
-							,auth.generateSignature(param, "hogehoge"));		
+				,auth.generateSignature(param, "hogehoge"));		
 		Assert.assertEquals("aaa=aaa&bbb=bbb&ccc=ccc&sig=2fbfe87e54cc53036463633ef29beeaa4d740e435af586798917826d9e525112"
-							,auth.generateQuery(param, "hogehoge"));		
+				,auth.generateQuery(param, "hogehoge"));		
 	}
-	
+
+	/**
+	 * Generate query and signature normally with "sop_" prefix 
+	 * @throws Exception 
+	 */
+	public void testGenerateSignatureWithJsonString() throws Exception {
+		SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
+
+		Assert.assertEquals("dc76e675e2bcabc31182e33506f5b01ea7966a9c0640d335cc6cc551f0bb1bba"
+				,auth.generateSignature("{\"hoge\":\"fuga\"}", "hogehoge"));		
+	}
+
 	/**
 	 * Generate query with invalid parameters
 	 */
@@ -58,14 +69,14 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", null);
-		
+
 		try {
 			auth.generateQuery(param, "hogehoge");
 		} catch (Exception e) {
 			Assert.assertEquals("value for to_date is invalid",e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * verify valid parameters
 	 * @throws Exception 
@@ -79,7 +90,7 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");		
 		param.put("sig", auth.generateSignature(param, "hogehoge"));
-		
+
 		Assert.assertTrue(auth.verifySignature(param, "hogehoge"));
 	}
 
@@ -100,7 +111,7 @@ public class SurveyonPartnersAuthTest extends TestCase {
 			Assert.assertEquals("sig doesn't exist",e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * verify without time
 	 * @throws Exception 
@@ -119,8 +130,7 @@ public class SurveyonPartnersAuthTest extends TestCase {
 			Assert.assertEquals("time doesn't exist",e.getMessage());
 		}
 	}
-	
-	
+
 	/**
 	 * verify valid wrong signature
 	 * @throws Exception 
@@ -133,10 +143,10 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");
 		param.put("sig", "b93766ddd534a1cbaefe30c97931c215a1220f3d11b265ce11b65f98d58ad0cx");
-		
+
 		Assert.assertFalse(auth.verifySignature(param, "hogehoge"));
 	}
-	
+
 	/**
 	 * verify too old time
 	 * @throws Exception 
@@ -147,14 +157,14 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		long time = now - 60 * 10 - 1;
 		ClockMock mock = new ClockMock(now);
 		auth.setClock(mock);
-		
+
 		TreeMap param = new TreeMap();
 		param.put("time", time + "");
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");
 		param.put("sig", auth.generateSignature(param, "hogehoge"));
-		
+
 		Assert.assertFalse(auth.verifySignature(param, "hogehoge"));
 	}		
 
@@ -168,17 +178,17 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		long time = now - 60 * 10;
 		ClockMock mock = new ClockMock(now);
 		auth.setClock(mock);
-		
+
 		TreeMap param = new TreeMap();
 		param.put("time", time + "");
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");
 		param.put("sig", auth.generateSignature(param, "hogehoge"));
-		
+
 		Assert.assertTrue(auth.verifySignature(param, "hogehoge"));
 	}		
-	
+
 	/**
 	 * verify upper limit
 	 * @throws Exception 
@@ -189,17 +199,17 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		long time = now + 60 * 10;
 		ClockMock mock = new ClockMock(now);
 		auth.setClock(mock);
-		
+
 		TreeMap param = new TreeMap();
 		param.put("time", time + "");
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");
 		param.put("sig", auth.generateSignature(param, "hogehoge"));
-		
+
 		Assert.assertTrue(auth.verifySignature(param, "hogehoge"));
 	}		
-		
+
 	/**
 	 * verify too new
 	 * @throws Exception 
@@ -210,23 +220,20 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		long time = now + 60 * 10 + 1;
 		ClockMock mock = new ClockMock(now);
 		auth.setClock(mock);
-		
+
 		TreeMap param = new TreeMap();
 		param.put("time", time + "");
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");
 		param.put("sig", auth.generateSignature(param, "hogehoge"));
-		
+
 		Assert.assertFalse(auth.verifySignature(param, "hogehoge"));
 	}		
-	
-	
-	
-		
+
 	private class ClockMock extends SurveyonPartnersClock{
 		private long timestamp = 0;
-		
+
 		public ClockMock(long timestamp)  {
 			this.timestamp = timestamp;
 		}
