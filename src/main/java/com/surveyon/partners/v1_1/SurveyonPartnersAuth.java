@@ -27,42 +27,6 @@ public class SurveyonPartnersAuth {
 	private static int SIG_VALID_FOR_SEC = 10 * 60;
 	
 	/**
-	 * query with signature generated from given parameters
-	 */
-	private String query = null;
-	
-	/**
-	 * signature generated from given parameters
-	 */
-	private String signature = null;
-
-	/**
-	 * getter
-	 * @return signature
-	 */
-	public String getSignature() {
-		return signature;
-	}
-
-	/**
-	 * getter
-	 * @return query
-	 */
-	public String getQuery() {
-		return query;
-	}
-
-	/**
-	 * Create SurveyonPartnersAuth.
-	 * @param parameters in TreeMap
-	 * @param app secret
-	 * @throws Exception
-	 */
-	public SurveyonPartnersAuth(TreeMap params, String secret) throws Exception {		
-		this.generateSignature(params, secret);
-	}
-	
-	/**
 	 * Verify given signature is valid 
 	 * @param parameters in TreeMap
 	 * @param app secret
@@ -95,13 +59,13 @@ public class SurveyonPartnersAuth {
 	}
 
 	/**
-	 * Generate signature from given parameters and app secret
+	 * Generate query from given parameters and app secret
 	 * @param parameters in TreeMap
 	 * @param app secret
 	 * @return generated signature
 	 * @throws Exception
 	 */
-	private String generateSignature(TreeMap params, String secret) throws Exception {
+	public static String generateQuery(TreeMap params, String secret) throws Exception {
 		//create HTTP parameter string
 		String combined = SurveyonPartnersAuth.createCombinedParameter(params);
 
@@ -109,9 +73,7 @@ public class SurveyonPartnersAuth {
 		String sig = SurveyonPartnersAuth.createHmacSha256Hex(combined, secret);
 		combined = combined + "&sig=" + sig;
 
-		this.query = combined;
-		this.signature = sig;
-		return sig;
+		return combined;
 	}
 
 	/**

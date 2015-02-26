@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 public class SurveyonPartnersAuthTest extends TestCase {
 
 	/**
-	 * create instance and generate signature normally 
+	 * Generate query normally 
 	 * @throws Exception 
 	 */
 	public void testInstantiateWithValidParams() throws Exception {
@@ -17,16 +17,13 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		param.put("app_id", "27");
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", "2015-1-21");
-		SurveyonPartnersAuth instance = new SurveyonPartnersAuth(param , "hogehoge");
 
-		Assert.assertNotNull(instance);
-		Assert.assertEquals("c39fb3790d9e1272a5ae25b57ad354393481534bf0078bd35266ba88cb668d0e",instance.getSignature());
-		Assert.assertEquals("app_id=27&from_date=2015-1-20&time=1424858192&to_date=2015-1-21&sig=c39fb3790d9e1272a5ae25b57ad354393481534bf0078bd35266ba88cb668d0e",instance.getQuery());		
+		Assert.assertEquals("app_id=27&from_date=2015-1-20&time=1424858192&to_date=2015-1-21&sig=c39fb3790d9e1272a5ae25b57ad354393481534bf0078bd35266ba88cb668d0e"
+							,SurveyonPartnersAuth.generateQuery(param, "hogehoge"));		
 	}
-
 	
 	/**
-	 * create instance with invalid parameters
+	 * Generate query with invalid parameters
 	 */
 	public void testInstantiateWithInvalidParams() {
 		TreeMap param = new TreeMap();
@@ -35,7 +32,7 @@ public class SurveyonPartnersAuthTest extends TestCase {
 		param.put("from_date", "2015-1-20");
 		param.put("to_date", null);
 		try {
-			new SurveyonPartnersAuth(param , "hogehoge");
+			SurveyonPartnersAuth.generateQuery(param, "hogehoge");
 		} catch (Exception e) {
 			Assert.assertEquals("value for to_date is invalid",e.getMessage());
 		}

@@ -21,9 +21,8 @@ public class Example {
 			param.put("app_id",  args[0]);
 			param.put("from_date", "2015-1-20");
 			param.put("to_date", "2015-1-21");
-			SurveyonPartnersAuth instance = new SurveyonPartnersAuth(param , args[1]);
 
-			HttpGet httpget = new HttpGet(args[2] + "?" + instance.getQuery());
+			HttpGet httpget = new HttpGet(args[2] + "?" + SurveyonPartnersAuth.generateQuery(param, args[1]));
 
 			System.out.println("executing request " + httpget.getURI());
 			response = httpclient.execute(httpget);
