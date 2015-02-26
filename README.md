@@ -9,9 +9,9 @@ TreeMap param = new TreeMap();
 param.put("<parameter_name1>", "<parameter_value1>");
 param.put("<parameter_name2>", "<parameter_value2>");
 
-SurveyonPartnersAuth auth = new SurveyonPartnersAuth(param ,"<APP_SECRET>");
+SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
 
-String uri = "https://<API_HOST>/path/to/endpoint?" + auth.getQuery();
+String uri = "https://<API_HOST>/path/to/endpoint?" + auth.getQuery(param ,"<APP_SECRET>");
 
 //=> set uri to HTTP client you use
 ~~~
@@ -29,9 +29,9 @@ TreeMap param = new TreeMap();
 param.put("<parameter_name1>", "<parameter_value1>");
 param.put("<parameter_name2>", "<parameter_value2>");
 
-SurveyonPartnersAuth auth = new SurveyonPartnersAuth(param ,"<APP_SECRET>");
+SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
 
-String uri = "https://<API_HOST>/path/to/endpoint?" + auth.getQuery();
+String uri = "https://<API_HOST>/path/to/endpoint?" + auth.getQuery(param ,"<APP_SECRET>");
 ~~~
 
 ## Verifying a request signature for validity
@@ -42,6 +42,8 @@ param.put("sig", "<signature>");
 param.put("<parameter_name1>", "<parameter_value1>");
 param.put("<parameter_name2>", "<parameter_value2>");
 
-booelan isValid = SurveyonPartnersAuth.verifySignature(param ,"<APP_SECRET>");
+SurveyonPartnersAuth auth = new SurveyonPartnersAuth();
+
+booelan isValid = auth.verifySignature(param ,"<APP_SECRET>");
 ~~~
 
