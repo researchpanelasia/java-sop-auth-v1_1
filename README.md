@@ -1,6 +1,6 @@
 # NAME
 
-com.surveyon.partners.v1_1.auth - SOP v1.1 authentication module for Java 1.4
+com.surveyon.partners.v1_1 - SOP v1.1 module for Java 1.4
 
 # SYNOPSIS
 
